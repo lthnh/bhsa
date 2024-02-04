@@ -1,0 +1,13 @@
+[package]
+name = "lhsbat"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.79"
+cpal = "0.15.2"
+fundsp = "0.16.0"
+rppal = "0.15.0"
+rustfft = "6.2.0"
