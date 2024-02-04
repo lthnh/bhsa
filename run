@@ -1,0 +1,5 @@
+#!/bin/bash
+set -xe
+cross build
+scp ~/thesis/lhsbat/target/arm-unknown-linux-gnueabihf/debug/lhsbat rbpi:/home/n1ght
+ssh rbpi '/home/n1ght/lhsbat'
