@@ -1,10 +1,7 @@
 use anyhow::Result;
 use spidev::{Spidev, SpidevOptions, SpidevTransfer, SpiModeFlags};
 
-use std::io::Write;
-use std::net::TcpStream;
-
-const CLOCK_FREQUENCY: u32 = 180_000;
+const CLOCK_FREQUENCY: u32 = 1_800_000;
 const START: u8 = 0b0000_0001;
 const CONFIG: u8 = 0b0010_0000;
 
@@ -19,12 +16,7 @@ fn create_spi() -> Result<Spidev> {
     Ok(spi)
 }
 
-fn create_tcp_stream() -> Result<TcpStream> {
-    let stream = TcpStream::connect("192.168.137.1:8080")?;
-    Ok(stream)
-}
-
-fn transfer_data(spi: &mut Spidev, stream: &mut TcpStream) -> Result<()> {
+fn full_duplex(spi: &mut Spidev) -> Result<()> {
     let tx_buf = [START, CONFIG, 0];
     let mut rx_buf = [0; 3];
     let mut val_as_bytes = [0; 4];
@@ -51,15 +43,12 @@ fn transfer_data(spi: &mut Spidev, stream: &mut TcpStream) -> Result<()> {
         val &= mask;
 
         let vol = val as f32 / 4096f32 * vol_ref;
-        println!("{} {:.4}", val, vol);
-        stream.write(&val.to_be_bytes())?;
+        println!("{:.4}", vol);
     }
 }
 
 fn main() -> Result<()> {
-    // 192.168.137.1 or 127.0.0.1
-    let mut stream = create_tcp_stream()?;
     let mut spi = create_spi()?;
-    transfer_data(&mut spi, &mut stream)?;
+    full_duplex(&mut spi)?;
     Ok(())
 }

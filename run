@@ -1,5 +1,21 @@
 #!/bin/bash
-set -xe
-cross build --bin $1
-scp ~/thesis/lhsbat/target/arm-unknown-linux-gnueabihf/debug/$1 rbpi:/home/n1ght
-ssh rbpi /home/n1ght/$1
+
+SESSION="lhsbat"
+SESSIONEXISTS=$(tmux list-sessions | grep -w "$SESSION")
+
+if [ "$SESSIONEXISTS" = "" ]
+then
+  tmux new-session -d -s "$SESSION" -d -x "$(tput cols)" -y "$(tput lines)"
+  tmux rename-window -t 0 'testing'
+  tmux send-keys -t 'testing' './runsrvr' C-m
+  tmux split-window -h
+  tmux send-keys -t 'testing' './runclnt' C-m
+  tmux select-pane -t 0
+else
+  tmux send-keys -t 'testing' './runsrvr' C-m
+  tmux select-pane -t 1
+  tmux send-keys -t 'testing' './runclnt' C-m
+  tmux select-pane -t 0
+fi
+
+tmux attach-session -t "$SESSION":0

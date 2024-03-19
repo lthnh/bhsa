@@ -1,0 +1,14 @@
+#!/bin/bash
+set -xe
+
+main="lhsbat"
+
+if [[ -z "$1" ]]; then
+    cross build --bin $main
+else 
+    cross build --bin $1
+    main=$1
+fi
+
+scp ~/thesis/lhsbat/target/arm-unknown-linux-gnueabihf/debug/$main rbpi:/home/n1ght
+ssh rbpi /home/n1ght/$main

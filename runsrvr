@@ -1,0 +1,5 @@
+#!/bin/bash
+set -xe
+cross build --bin server
+scp /home/anhle/thesis/lhsbat/target/x86_64-pc-windows-gnu/debug/server.exe winpc:/D:/Thesis/code/lhsbat
+ssh winpc D:/Thesis/code/lhsbat/server.exe 
