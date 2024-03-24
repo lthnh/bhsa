@@ -20,7 +20,7 @@ fn create_spi() -> Result<Spidev> {
 }
 
 fn create_tcp_stream() -> Result<TcpStream> {
-    let stream = TcpStream::connect("192.168.137.1:8080")?;
+    let stream = TcpStream::connect("10.42.0.1:8080")?;
     Ok(stream)
 }
 
